@@ -24,6 +24,8 @@
         
 // Preprocessor conditional - e.x. only run if in debug mode (for testing)
 #ifdef DEBUG
+        // FIXME: Test Mode (Remove for production)
+#pragma message "This should be removed eventually"
         [self addTestData];
 #endif
     }
@@ -43,6 +45,8 @@
                                                splitCount:8
                                             tipPercentage:25.]];
 }
+
+// MARK: - Convenience accessors
 
 - (NSArray<LSITip *> *)tips
 {
