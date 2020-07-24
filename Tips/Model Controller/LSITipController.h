@@ -7,10 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+// Pre announcing LSITip exists
+@class LSITip;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LSITipController : NSObject
+
+// foward declaring array using the pre-announcement
+@property (nonatomic, readonly, copy) NSArray<LSITip *> *tips;
 
 @end
 
