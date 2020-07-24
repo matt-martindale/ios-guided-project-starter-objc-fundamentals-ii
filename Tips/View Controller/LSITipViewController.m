@@ -50,16 +50,30 @@
 }
 
 - (void)calculateTip {
-    // TODO: Calculate the tip using the values from the UI
+    self.percentage = round(self.percentageSlider.value);
+    self.total = self.totalTextField.text.doubleValue;
+    self.split = self.splitStepper.value;
+    
+    self.tip = self.total * (self.percentage/100.) / self.split;
+    
+    [self updateViews];
 }
 
 - (void)updateViews {
-    // TODO: Use the model data to update the views
+    self.splitStepper.value = self.split;
+    self.percentageSlider.value = self.percentage;
+    self.totalTextField.text = [NSString localizedStringWithFormat:@"%.2f", self.total];
+    
+    self.tipLabel.text = [NSString localizedStringWithFormat:@"$%.2f", self.tip];
+    self.splitLabel.text = [NSString localizedStringWithFormat:@"%ld", (long)self.split];
+    
+    self.percentageLabel.text = [NSString localizedStringWithFormat:@"%0.0f%%", self.percentage];
 }
 
 - (void)saveTipNamed:(NSString *)name {
     
-    // TODO: Save the tip to the controller and update tableview
+    [self.tipController addTip:[[LSITip alloc] initWithName:name total:self.total splitCount:self.split tipPercentage:self.percentage]];
+    [self.tableView reloadData];
 
 }
 
