@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 // Pre announcing LSITip exists
 @class LSITip;
 
@@ -16,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // foward declaring array using the pre-announcement
 @property (nonatomic, readonly, copy) NSArray<LSITip *> *tips;
+@property (nonatomic, readonly) NSUInteger tipCount;
+
+- (LSITip *)tipAtIndex:(NSUInteger)index;
+-(void)addTip:(LSITip *)aTip;
 
 @end
 
