@@ -21,7 +21,11 @@
 {
     if (self = [super init]) {
         _internalTips = [[NSMutableArray alloc] init];
+        
+// Preprocessor conditional - e.x. only run if in debug mode (for testing)
+#ifdef DEBUG
         [self addTestData];
+#endif
     }
     return self;
 }
