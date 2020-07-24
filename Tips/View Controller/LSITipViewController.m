@@ -8,12 +8,13 @@
 
 #import "LSITipViewController.h"
 #import "LSITipController.h"
+#import "LSITip.h"
 
-@interface LSITipViewController ()
+@interface LSITipViewController () <UITableViewDataSource, UITableViewDelegate>
 
 // Private Properties
 @property (nonatomic) double total;
-@property (nonatomic) int split;
+@property (nonatomic) NSInteger split;
 @property (nonatomic) double percentage;
 @property (nonatomic) double tip;
 @property (nonatomic) LSITipController *tipController;
@@ -28,7 +29,9 @@
 @property (nonatomic) IBOutlet UITableView *tableView;
 
 // Private Methods
-
+- (void)calculateTip;
+- (void)updateViews;
+- (void)saveTipNamed:(NSString *)name;
 
 @end
 
@@ -36,6 +39,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.tipController = [[LSITipController alloc] init];
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    [self calculateTip];
     
 }
 
@@ -78,19 +88,29 @@
 
 // MARK: - UITableViewDataSource
 
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.tipController.tipCount;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TipCell" forIndexPath:indexPath];
+    
+    LSITip *tip = [self.tipController tipAtIndex:indexPath.row];
+    cell.textLabel.text = tip.name;
+    return cell;
+}
 
 // MARK: - UITableViewDelegate
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-// TODO: Load the selected tip from the controller
-
-//}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    LSITip *tip = [self.tipController tipAtIndex:indexPath.row];
+    self.total = tip.total;
+    self.split = tip.splitCount;
+    self.percentage = tip.tipPercentage;
+    
+    [self updateViews];
+    [self calculateTip];
+}
 
 // MARK: - Alert Helper
 
@@ -99,7 +119,6 @@
                                 alertControllerWithTitle:@"Save Tip"
                                 message:@"What name would you like to give to this tip?"
                                 preferredStyle:UIAlertControllerStyleAlert];
-    
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Tip Name:";
